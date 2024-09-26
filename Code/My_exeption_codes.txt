@@ -1,0 +1,15 @@
+Цей файл має коди виключень, та їх пояснення
+This file has exception codes and their explanations
+
+201  {
+	Індекс поза межами діапазону  
+	IndexError: list index out of range
+}
+202 {
+	Не має що видаляти
+	DeleteError: list is empty
+}
+203 {
+	список пустий
+	DisplayError: list is empty
+}
