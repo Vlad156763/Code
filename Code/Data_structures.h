@@ -3,6 +3,7 @@
 #include "My_exeptions.h"
 #include <ostream>
 #include <iostream>
+
 using namespace my_exeptions;
 using std::ostream;
 namespace data_struct {
@@ -18,7 +19,7 @@ namespace data_struct {
 			node(const T & = T(), node* = nullptr, node* = nullptr);
 			~node();
 		}*first_node = nullptr, * last_node = nullptr;
-		node* search(const int&); //повернення вузла за індексом
+		node* search(const int&);
 	public:
 		dl_list();
 		~dl_list();
@@ -32,8 +33,24 @@ namespace data_struct {
 
 		void print_from_end(ostream&) const;
 		void print_from_start(ostream&) const;
+		int get_size();
 
 		T& operator [] (const int&);
+
+	};
+
+	//max_heap працює тільки з int
+	class max_heap {
+	private:
+		dl_list<int> heap;
+		void sort();
+	public:
+		void print(ostream&);
+		void add(const int&);
+		int& get(const int&);
+		void del(const int&);
+		max_heap();
+		max_heap(const int*, const int&);
 	};
 
 	template <typename T> dl_list<T>::node::node
@@ -104,7 +121,7 @@ namespace data_struct {
 				/*якщо новий елемент знаходиться ближче до кінця*/
 				else {
 					tmp = this->last_node;
-					for (int i = this->size - 1; i > index - 1; --i) tmp = tmp->prev_node;
+					for (int i = this->get_size - 1; i > index - 1; --i) tmp = tmp->prev_node;
 				}
 				// Вставка нового вузла між tmp і tmp->next_node
 				node* new_node = new node(data, tmp->next_node, tmp);
@@ -171,6 +188,9 @@ namespace data_struct {
 	}
 	template <typename T> T& dl_list<T>::operator [] (const int& index) {
 		return search(index)->value;
+	}
+	template <typename T> int dl_list<T>::get_size() {
+		return this->size;
 	}
 }
 #endif //Data_structures
