@@ -1,0 +1,38 @@
+Цей файл має коди виключень, та їх пояснення
+This file has exception codes and their explanations
+
+201 {
+    Індекс поза межами діапазону. Переконайтесь, що не відбувається доступу     до неіснуючого елементу списку.
+    IndexError: list index out of range
+}
+
+202 {
+    Не має що видаляти. Спроба видалити неіснуючий елемент.
+    DeleteError: attempting to delete a non-existent element
+}
+
+203 {
+    Список пустий. Спроба вивести порожній список.
+    DisplayError: list is empty
+}
+
+204 {
+    Куча порожня, спроба отримати елемент у пустій купі.
+    GetError: heap is empty
+}
+
+205 {
+    Індекс поза межами діапазону. Переконайтесь, що не відбувається доступу
+    до неіснуючого елементу купи.
+    IndexError: heap index out of range
+}
+
+206 {
+    Куча пуста. Спроба вивести порожню купу.
+    DisplayError: heap is empty
+}
+
+207 {
+    Помилка відкриття файлу для запису.
+    FileError: could not open file for writing
+}
