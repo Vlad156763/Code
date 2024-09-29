@@ -54,6 +54,13 @@ namespace my_exceptions {
 			<< "207 {\n"
 			<< "    Помилка відкриття файлу для запису.\n"
 			<< "    FileError: could not open file for writing\n"
-			<< "}\n";
+			<< "}\n"
+			
+			<< "\n"
+			<<"208 {\n"
+			<< "    Помилка відкриття файлу для читання.\n"
+			<< "    FileError: could not open file for reading\n"
+			<<"}\n";
+		My_exception_codes.close();
 	}
 }

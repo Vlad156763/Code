@@ -1,7 +1,10 @@
 #include "Data_structures.h"
 #include "Algoritms.h"
+#include "task_lb1.h"
+#include <iostream>
 using namespace algoritms;
 using namespace data_struct;
+using namespace task;
 using std::cout;
 using std::endl;
 using std::cin;
@@ -26,6 +29,9 @@ using std::cin;
 /*
 Пірамідальне сортування
 */
+
+
+
 /*
 Варіант No 3
 Інформація про студентів групи включає наступну інформацію:
@@ -47,20 +53,7 @@ int main() {
 	main_test_priory_queue_heap(cout); cout << endl;
 	main_test_piramidal_sort(cout); cout << endl;
 	cout << "СПИСОК,КУПА З ПРІОРІТЕТАМИ ТА ПІРАМІДАЛЬНЕ СОРТУВАННЯ УСПІШНО ПРОЙШЛИ ТЕСТ!" << endl << endl << endl;
-	
-	char tmp;
-	do {
-		cout << "Випадково заповнювати інформацію про студентів? [n/y]: ";
-		cin >> tmp;
-		if (tmp == 'n') {
-			cout << "Погано!";
-			break;
-		}
-		else if (tmp == 'y') {
-			cout << "Добре!";
-			break;
-		}
-	} while (true);
+	main_test_task(cout, cin);
 
 	return 0;
 }

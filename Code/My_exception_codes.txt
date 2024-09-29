@@ -36,3 +36,8 @@ This file has exception codes and their explanations
     Помилка відкриття файлу для запису.
     FileError: could not open file for writing
 }
+
+208 {
+    Помилка відкриття файлу для читання.
+    FileError: could not open file for reading
+}
