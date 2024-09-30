@@ -54,6 +54,7 @@ int main() {
 	main_test_piramidal_sort(cout); cout << endl;
 	cout << "СПИСОК,КУПА З ПРІОРІТЕТАМИ ТА ПІРАМІДАЛЬНЕ СОРТУВАННЯ УСПІШНО ПРОЙШЛИ ТЕСТ!" << endl << endl << endl;
 	main_test_task(cout, cin);
+	
 
 	return 0;
 }

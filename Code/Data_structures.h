@@ -161,7 +161,7 @@ namespace data_struct {
 	}
 	template<typename T1> ostream& operator << (ostream& os, const priory_queue_heap<T1>& obj) {
 		if (obj.array != nullptr) {
-			for (int i = 0; i < obj.size; i++) os << '[' << obj.array[i].value << " (" << obj.array[i].priory << ')' << ']' << '\n';
+			for (int i = 0; i < obj.size; i++) os << '[' << obj.array[i].value << " (" << obj.array[i].priory << ')' << ']' << "  ";
 		}
 		else throw error("DisplayError: heap is empty",206);
 		return os;
