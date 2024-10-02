@@ -8,7 +8,7 @@ namespace my_exceptions {
 	const char* error::get_error_msg() { return error_msg; }
 	int error::get_error_code() { return error_code;}
 	void My_exception_codes_file() {
-		ofstream My_exception_codes("My_exception_codes.txt");
+		ofstream My_exception_codes("lb_1/My_exception_codes.txt");
 		if (!My_exception_codes.is_open()) throw error("FileError: could not open file for writing", 207);
 		My_exception_codes
 			<< "Цей файл має коди виключень, та їх пояснення\n" 

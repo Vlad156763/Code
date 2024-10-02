@@ -24,9 +24,11 @@ namespace data_struct {
 	public:
 		dl_list();
 		~dl_list();
+
 		void push_front(const T&); //додавання вузла на початок
 		void insert(const T&, const int&); //вставка вузла за індексом 
 		void push_back(const T&);//додавання вузла в кінець
+
 		void pop_front(); //видалення вузла на початку
 		void remove_at(const int&); //видалення вузла за індексом
 		void pop_back(); //видалення вузла в кінці

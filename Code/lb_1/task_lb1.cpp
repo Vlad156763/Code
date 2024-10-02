@@ -1,3 +1,5 @@
+
+
 #include "task_lb1.h"
 #include "Algoritms.h"
 #include "Data_structures.h"
@@ -5,10 +7,17 @@
 #include <fstream>
 #include <sstream>
 
+using namespace algoritms;
+using namespace data_struct;
+using namespace task;
 using std::stringstream;
 using std::fstream;
 using std::ios;
 using std::pair;
+using std::cout;
+using std::endl;
+using std::cin;
+
 using namespace data_struct;
 using namespace algoritms;
 namespace task {
@@ -97,7 +106,7 @@ namespace task {
                                 break;
                             }
                             else if (tmp_1 == 'y') {
-                                fstream students("students.txt", ios::out);
+                                fstream students("lb_1/students.txt", ios::out);
                                 if (!students.is_open()) throw error("FileError: could not open file for writing", 207);
                                 string pib, address, gender;
                                 double middle_bal;
@@ -118,7 +127,7 @@ namespace task {
                     }
                     else if (tmp == 'y') {
                         //всі збіги випадкові!!!
-                        fstream students("students.txt", ios::out);
+                        fstream students("lb_1/students.txt", ios::out);
                         if (!students.is_open()) throw error("FileError: could not open file for writing", 207);
                         students
                             << "Ivanov Ivan Ivanovych" << " | " << "Address 1" << " | " << 4.5 << " | " << "man" << " | " << "10.03.2000\n"
@@ -155,7 +164,7 @@ namespace task {
                 
             }
             else if (tmp_2 != 'y')continue;
-            fstream students("students.txt", ios::in);
+            fstream students("lb_1/students.txt", ios::in);
             if (!students.is_open()) error("FileError: could not open file for reading", 208);
             string line;
             while (getline(students, line)) {
@@ -222,4 +231,14 @@ namespace task {
             break;
         } while (true);      
     }
+	void main_test_all_files() {
+		My_exception_codes_file(); //якщо користувач видалить в каталозі файл txt з кодами, помилок, він знову створиться
+		//ТЕСТ!!!
+		main_test_dl_list(cout); cout << endl;
+		main_test_priory_queue_heap(cout); cout << endl;
+		//main_test_piramidal_sort(cout); cout << endl;
+		cout << "СПИСОК,КУПА З ПРІОРІТЕТАМИ ТА ПІРАМІДАЛЬНЕ СОРТУВАННЯ УСПІШНО ПРОЙШЛИ ТЕСТ!" << endl << endl << endl;
+		main_test_task(cout, cin);
+	
+	}
 }
