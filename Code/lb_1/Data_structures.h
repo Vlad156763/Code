@@ -2,7 +2,7 @@
 #define Data_structures_h
 #include "My_exceptions.h"
 #include <iostream>
-using namespace my_exceptions;
+using my_exceptions::error;
 using std::ostream;
 
 namespace data_struct {
@@ -28,6 +28,7 @@ namespace data_struct {
 		void push_front(const T&); //додавання вузла на початок
 		void insert(const T&, const int&); //вставка вузла за індексом 
 		void push_back(const T&);//додавання вузла в кінець
+		bool is_empty(); //якщо голова пуста, повертаю false
 
 		void pop_front(); //видалення вузла на початку
 		void remove_at(const int&); //видалення вузла за індексом
@@ -61,6 +62,8 @@ namespace data_struct {
 		void sift_up();
 		void sift_down(const int& = 0);
 	};
+
+
 
 	template <typename T> priory_queue_heap<T>::priory_queue_heap() {}
 	template <typename T> priory_queue_heap<T>::priory_queue_heap(const priory_queue_heap<T>::node* array_pa,const int& size) {
@@ -100,7 +103,7 @@ namespace data_struct {
 				this->size = 0;
 			}
 		}
-		else throw error("DeleteError: attempting to delete a non-existent element", 202);
+		else throw my_exceptions::error("DeleteError: attempting to delete a non-existent element", 202);
 	}
 	template<typename T> T priory_queue_heap<T>::get() {
 		if (this->array != nullptr) {
@@ -110,7 +113,7 @@ namespace data_struct {
 			sift_down(); // можна не відправляти індекс, так як за замовчуванням стоїть 0
 			return value;
 		}
-		else throw error("GetError: heap is empty", 204);
+		else throw my_exceptions::error("GetError: heap is empty", 204);
 	}
 	template<typename T> priory_queue_heap<T>::~priory_queue_heap() {
 		if (array != nullptr)  delete[] this->array;
@@ -165,9 +168,14 @@ namespace data_struct {
 		if (obj.array != nullptr) {
 			for (int i = 0; i < obj.size; i++) os << '[' << obj.array[i].value << " (" << obj.array[i].priory << ')' << ']' << "  ";
 		}
-		else throw error("DisplayError: heap is empty",206);
+		else throw my_exceptions::error("DisplayError: heap is empty",206);
 		return os;
 	}
+
+	template <typename T> bool dl_list<T>::is_empty() {
+		return (this->first_node == nullptr) ? true: false;
+	}
+
 	template <typename T> dl_list<T>::node::node
 	(const T& data, node* next_node_pa, node* prev_node_pa)
 		:value(data), next_node(next_node_pa), prev_node(prev_node_pa) {}
@@ -196,7 +204,7 @@ namespace data_struct {
 			delete tmp;
 			this->size--;
 		}
-		else throw error("DeleteError: attempting to delete a non-existent element", 202);
+		else throw my_exceptions::error("DeleteError: attempting to delete a non-existent element", 202);
 	}
 	template <typename T> void dl_list<T>::push_back(const T& data) {
 		node* new_node = new node(data, nullptr, this->last_node);
@@ -214,7 +222,7 @@ namespace data_struct {
 			delete tmp;
 			this->size--;
 		}
-		else throw error("DeleteError: attempting to delete a non-existent element", 202);
+		else throw my_exceptions::error("DeleteError: attempting to delete a non-existent element", 202);
 	}
 	template<typename T> void dl_list<T>::insert(const T& data, const int& index) {
 		if (index >= 0 && index <= this->size) {
@@ -240,7 +248,7 @@ namespace data_struct {
 				this->size++;
 			}
 		}
-		else throw error("IndexError: list index out of range", 201);
+		else throw my_exceptions::error("IndexError: list index out of range", 201);
 	}
 	template <typename T> typename dl_list<T>::node* dl_list<T>::search(const int& index) {
 		if (index >= 0 && index < this->size) {
@@ -257,7 +265,7 @@ namespace data_struct {
 			}
 			return tmp;
 		}
-		else throw error("IndexError: list index out of range", 201);
+		else throw my_exceptions::error("IndexError: list index out of range", 201);
 	}
 	template <typename T> void dl_list<T>::remove_at(const int& index) {
 		try {
@@ -274,9 +282,9 @@ namespace data_struct {
 				this->size--;
 			}
 		}
-		catch (error& er) {
+		catch (my_exceptions::error& er) {
 			//перевіряю чи точно мій метод кинув виключення, а не службова якась штучка
-			if(er.get_error_code() == 201) throw error("DeleteError: attempting to delete a non-existent element", 202);
+			if(er.get_error_code() == 201) throw my_exceptions::error("DeleteError: attempting to delete a non-existent element", 202);
 		}
 	}
 	template <typename T> void dl_list<T>::print_from_start(ostream& os) const {
@@ -287,7 +295,7 @@ namespace data_struct {
 				tmp = tmp->next_node;
 			}
 		}
-		else throw error("DisplayError: list is empty", 203);
+		else throw my_exceptions::error("DisplayError: list is empty", 203);
 	}
 	template <typename T> void dl_list<T>::print_from_end(ostream& os) const {
 		if (this->last_node != nullptr) {
@@ -297,7 +305,7 @@ namespace data_struct {
 				tmp = tmp->prev_node;
 			}
 		}
-		else throw error("DisplayError: list is empty", 203);
+		else throw my_exceptions::error("DisplayError: list is empty", 203);
 	}
 	template <typename T> T& dl_list<T>::operator [] (const int& index) { return search(index)->value; }
 	template <typename T> int dl_list<T>::get_size() { return this->size; }
