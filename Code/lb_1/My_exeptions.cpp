@@ -60,7 +60,14 @@ namespace my_exceptions {
 			<<"208 {\n"
 			<< "    Помилка відкриття файлу для читання.\n"
 			<< "    FileError: could not open file for reading\n"
-			<<"}\n";
+			<<"}\n"
+
+			<< "\n"
+			<< "209 {\n"
+			<< "    Помилка отримання елементу з пустого списку.\n"
+			<< "    GetError: list is empty\n"
+			<< "}\n";
+
 		My_exception_codes.close();
 	}
 }

@@ -2,7 +2,7 @@
 #define Data_structures_h
 #include "My_exceptions.h"
 #include <iostream>
-using my_exceptions::error;
+using namespace my_exceptions;
 using std::ostream;
 
 namespace data_struct {
@@ -35,6 +35,7 @@ namespace data_struct {
 		void pop_back(); //видалення вузла в кінці
 		void print_from_end(ostream&) const;
 		void print_from_start(ostream&) const;
+		T& front();
 		int get_size();
 		T& operator [] (const int&);
 	};
@@ -46,7 +47,7 @@ namespace data_struct {
 			T value;
 			int priory;
 		};
-		priory_queue_heap(const priory_queue_heap<T>::node*,const int&);
+		priory_queue_heap(const priory_queue_heap<T>::node*, const int&);
 		void add(const T&, const int&);
 		void del(const int&);
 		~priory_queue_heap();
@@ -66,8 +67,8 @@ namespace data_struct {
 
 
 	template <typename T> priory_queue_heap<T>::priory_queue_heap() {}
-	template <typename T> priory_queue_heap<T>::priory_queue_heap(const priory_queue_heap<T>::node* array_pa,const int& size) {
-		for (int i = 0; i < size; i++) 
+	template <typename T> priory_queue_heap<T>::priory_queue_heap(const priory_queue_heap<T>::node* array_pa, const int& size) {
+		for (int i = 0; i < size; i++)
 			this->add(array_pa[i].value, array_pa[i].priory);
 	}
 	template<typename T> priory_queue_heap<T>& priory_queue_heap<T>::operator=(const priory_queue_heap<T>& other) {
@@ -85,12 +86,12 @@ namespace data_struct {
 	template<typename T> priory_queue_heap<T>::priory_queue_heap(const priory_queue_heap<T>& other) : size(other.size) {
 		if (other.array != nullptr) {
 			this->array = new node[other.size];
-			for (int i = 0; i < other.size; i++) 
-				this->array[i] = other.array[i];  
+			for (int i = 0; i < other.size; i++)
+				this->array[i] = other.array[i];
 		}
 	}
 	template<typename T> void priory_queue_heap<T>::del(const int& index) {
-		if (index >=0 && index < this->size) {
+		if (index >= 0 && index < this->size) {
 			if (index != 0) {
 				this->array[index] = this->array[this->size - 1];
 				node* new_array = new node[this->size - 1];
@@ -154,7 +155,7 @@ namespace data_struct {
 		}
 		else {
 			node* tmp = new node[this->size + 1];
-			for (int i = 0; i < this->size; i++) 
+			for (int i = 0; i < this->size; i++)
 				tmp[i] = this->array[i];
 			delete[] this->array;
 			tmp[this->size].value = data;
@@ -168,13 +169,18 @@ namespace data_struct {
 		if (obj.array != nullptr) {
 			for (int i = 0; i < obj.size; i++) os << '[' << obj.array[i].value << " (" << obj.array[i].priory << ')' << ']' << "  ";
 		}
-		else throw my_exceptions::error("DisplayError: heap is empty",206);
+		else throw my_exceptions::error("DisplayError: heap is empty", 206);
 		return os;
 	}
 
 	template <typename T> bool dl_list<T>::is_empty() {
-		return (this->first_node == nullptr) ? true: false;
+		return (this->first_node == nullptr) ? true : false;
 	}
+	template <typename T> T& dl_list<T>::front() {
+		if (this->first_node == nullptr) throw error(" GetError: list is empty", 209);
+			return this->first_node->value;
+	}
+
 
 	template <typename T> dl_list<T>::node::node
 	(const T& data, node* next_node_pa, node* prev_node_pa)
