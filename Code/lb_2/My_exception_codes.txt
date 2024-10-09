@@ -1,0 +1,16 @@
+Цей файл має коди виключень, та їх пояснення
+This file has exception codes and their explanations
+
+201 {
+    Кількість ключів для вузла не допустима.
+    FatalError: the number of keys is not valid for b-treee
+}
+
+12 {
+    Помилка пошуку, дерево пусте
+    SearchError: b-tree is empty
+}
+11 {
+    Помилка пошуку, ключа немає у дереві
+    SearchError: there is no such element in the b-tree
+}
