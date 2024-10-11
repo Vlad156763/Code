@@ -10,7 +10,13 @@ This file has exception codes and their explanations
     Помилка пошуку, дерево пусте
     SearchError: b-tree is empty
 }
+
 11 {
     Помилка пошуку, ключа немає у дереві
     SearchError: there is no such element in the b-tree
+}
+
+13 {
+    Помилка пошуку, в дереві не може бути більше одного однакових значень
+    SearchError: there cannot be more than one identical value in the b-tree 
 }

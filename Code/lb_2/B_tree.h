@@ -20,19 +20,14 @@ namespace data_struct_b_tree {
 			~node();
 			
 		}*root = nullptr;
-		
-		void insert_non_full(node*, const T&);
-		void split_child(node*, const int&);
-
-
-		void split_node(node*, const T&);
+		typename b_tree<T>::node* split_node(node*);
+		bool key_is_in(const T&); //перевірка чи ключ є в дереві
 	public:
 
 		b_tree(const int&); //параметр const int& для передачі t
-
-		void add_keys(const T&);
 		void print(ostream&);
 		T& operator[](const T&);//шукаю елемент за значенням
+		
 		~b_tree(); 
 
 

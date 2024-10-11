@@ -23,9 +23,15 @@ namespace my_exceptions_2 {
 			<< "    Помилка пошуку, дерево пусте\n"
 			<< "    SearchError: b-tree is empty\n"
 			<< "}\n"
+			<< "\n"
 			<< "11 {\n"
 			<< "    Помилка пошуку, ключа немає у дереві\n"
 			<< "    SearchError: there is no such element in the b-tree\n"
+			<< "}\n"
+			<< "\n"
+			<< "13 {\n"
+			<< "    Помилка пошуку, в дереві не може бути більше одного однакових значень\n"
+			<< "    SearchError: there cannot be more than one identical value in the b-tree \n"
 			<< "}\n";
 		My_exception_codes.close();
 	}
