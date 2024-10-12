@@ -1,17 +1,21 @@
 #include "B_tree.h"
 #include "Exception_for_lb_2.h"
-using namespace my_exceptions_2;
-#include <iostream>
 #include "../lb_1/Data_structures.h"
+#include <iostream>
+
+using namespace my_exceptions_2;
 using data_struct::dl_list; 
 using std::ostream;
 using std::cout;
+using std::cin;
 using std::endl;
 using std::pair;
 using std::make_pair;
-
-
+using std::numeric_limits;
+using std::streamsize;
 ostream& tab(ostream& os);
+
+
 namespace data_struct_b_tree {
 
 	template <typename T> b_tree<T>::node::node(const int& max_number_of_keys, const bool& leaf, node* father) {
@@ -23,9 +27,8 @@ namespace data_struct_b_tree {
 		}
 		this->father = father;
 	}
+
 	template <typename T> b_tree<T>::node::~node() {
-		/*При створенні вузла, розір масивів одразу задається, тому не треба перевіряти
-		чи покажчики не дорівнюють nullptr*/
 		delete[] array_keys;
 		for (int i = 0; i < this->max_number_of_keys; i++)
 			delete this->children[i];
@@ -33,17 +36,12 @@ namespace data_struct_b_tree {
 	}
 
 	template <typename T> b_tree<T>::b_tree(const int& t) {
-		/*перевірка параметра t, ящко він не відповідає умові викликається виключення.
-		створюю новий вузол з розміром 2t і вказую що цей вузол листок (так як він є перший)*/
 		if (t <= 1 || t * 2 >= INT_MAX) throw error_2("FatalError: the number of keys is not valid for b-tree", 201);
 		this->max_num_keys = 2 * t;
-		/*передаю number_of_keys один раз, далі можна не передавати так як він є параметорм за 
-		замовчуванням.*/
 		this->root = new node(max_num_keys, true,nullptr); 
 	}
 
 	template<typename T> void b_tree<T>::add_key(const T& key) {
-		
 		if (this->key_is_in(key)) throw error_2("SearchError: there cannot be more than one identical value in the b-tree", 13);
 		node* father = this->root;
 		node* ptr_node_sort = father; // вузол, в який за допомогою сорутвання вставлятиму ключ
@@ -52,11 +50,8 @@ namespace data_struct_b_tree {
 		if (!father->leaf) { // якщо батько не листок 
 			// цикл, для пошуку батька, який має дитину-листка яка повинна мати ключ
 			while (!father->children[0]->leaf) {
-				//цикл для пошуку дитини, відносно батька яка повинна мати ключ. 
-				//Тут все коректно, якщо data менше найменшого, i = 0 , якщо ж data більше найбільшого, 
-				//i = кількості ключів у дитині
 				i = 0;
-				while (i < father->num_keys && key > father->array_keys[i]) i++; //індекс дитини, яка повинна мати ключ.
+				while (i < father->num_keys && key > father->array_keys[i]) i++;
 				father = father->children[i]; //рухаюсь до дитини, яка може мати ключ
 			}
 			//шукаю вже у поточного батька дитину яка повинна мати ключ
@@ -81,20 +76,12 @@ namespace data_struct_b_tree {
 		//так як реалізація методу розбиття НЕ передбачає вставку нового ключа в дитину, метод просто
 		//розбиває заповнений вузол (якщо ключ не можна буде вставити у батька, тоді робивається і батько і так далі.
 		//після завершення виконання методу розбиття він повертає покажчик на батька для розбитого вузла 
+		//шукаю вузлі, який повернтає метод split_node дитину яка може мати ключ
 		if (search_child) {
 			int i = ptr_node_sort->num_keys - 1;
 			while (key < ptr_node_sort->array_keys[i]) i--; i++;
 			ptr_node_sort = ptr_node_sort->children[i];
 		}
-		//сортую ptr_node_sort так як сортування треба в будь-якому випадку і для кореня
-		//якщо він не заповнений, і для листків, які не заповнені, і навіть після розділу ptr_node_sort теж треба відсортувати щоб вставити ключ
-		/*if (!ptr_node_sort->children->leaf) {
-			int i = ptr_node_sort->num_keys;
-			while (i >= 0 && key < ptr_node_sort->array_keys[i -1]) {
-				ptr_node_sort->children[i + 1] = ptr_node_sort->children[i];
-				i--;
-			}
-		}*/
 		//вставка ключів не може бути десь в середині дерева, ключі вставляються тілкьи в листки які не мають нащаків, а тому перевірки на нащадків зайві
 		i = ptr_node_sort->num_keys - 1;
 		while (i >= 0 && key < ptr_node_sort->array_keys[i]) {
@@ -111,7 +98,6 @@ namespace data_struct_b_tree {
 		if (full_node == this->root) {
 			node* new_root = new node(this->max_num_keys, false, nullptr);
 			new_node->father = new_root;
-			//full_node  - лівий вузол
 			new_root->array_keys[0] = full_node->array_keys[full_node->num_keys / 2];//записую центральний ключ в новий вузол
 			full_node->num_keys--; //контролюю тілкьи розмір, незважаючи на значення 
 			new_root->num_keys++;
@@ -121,17 +107,15 @@ namespace data_struct_b_tree {
 			full_node->father = new_root; 
 			
 		}
-		//ділення вузлів, які не є коренем відбуваються за допомогою рекурсії доти, доки є можливість вставити ключ у батька, якщо можливості немає, викликається ця ж функція
+		//ділення вузлів, які не є коренем відбуваються за допомогою рекурсії доти, доки не з'явиться можливість вставити ключ у батька
 		else {
 			//якщо у батька кількість ключів максимальна, рекурсивно рухаюсь доти, доки не буде можливість вставити ключ в батька
 			if (full_node->father->num_keys == this->max_num_keys -1 ) {
 				split_node(full_node->father);
 
 			} 
-			/*тут повинна бути реалізація розділу вузла якщо він не листок*/
-			//покроково записувати ключі у right_node починаючи з центрального full_node ключа
-			//якщо корінь це не листок (переписую всіх дітей з заповненого вузла в новий правий вузол) якщо ж листок, дітей не переписую
-			//методом сортування вставкою шукаю місце куди вставити 
+			//переписую всіх дітей що більші центрального ключа  з заповненого вузла в новий вузол
+			//методом сортування вставкою шукаю місце куди вставити ключ і вставляю його зміннючи розміри для вузлів
 			int i = full_node->father->num_keys - 1;
 			while (full_node->array_keys[full_node->num_keys/2] < full_node->father->array_keys[i]) {
 				//вийти за межі індексації не вийде, так як у батька хоча б ОДИН ключ можна буде вставити
@@ -145,25 +129,23 @@ namespace data_struct_b_tree {
 			full_node->father->num_keys++;
 			full_node->num_keys--;
 			new_node->father = full_node->father; //для нового правого вузла роблю батька таким самим як і для лівого вузла
-			int index_child = 0;
 		}
 		//якщо корінь це не листок (переписую всіх дітей з заповненого вузла в новий правий вузол) якщо ж листок, дітей не переписую
-
 		if (!full_node->leaf) {
 			for (int i = full_node->num_keys / 2 + 1, index_array = 0; i <= full_node->num_keys + 1; i++, index_array++) {
 				//після розбиття вузол може мати менше дітей, тому треба перевіряти дитину на nullptr бо інакше буде попередження 6011
 				if (full_node->children[i] != nullptr) { // Перевіряю, чи дитина існує
 					new_node->children[index_array] = full_node->children[i]; // Копіюю дитину
-					new_node->children[index_array]->father = new_node; // Міняю батька, якщо дитина не NULL
-					full_node->children[i] = nullptr; // Очищую старий вказівник
+					new_node->children[index_array]->father = new_node; // Міняю батька
+					full_node->children[i] = nullptr; // Очищую старий покажчик
 				}
 			}
 
 		}
-		//переписую тільки ключі в новий вузол
+		//переписую ключі в новий вузол
 		for (int i = full_node->num_keys / 2 + 1, index_array = 0; i < this->max_num_keys - 1; i++, index_array++) {
 			new_node->array_keys[index_array] = full_node->array_keys[i]; //в новий вузол переписую всі ключі що більші цетрального 
-			//контролюю розмір вузлів у поточному циклі
+			//контролюю кількість ключів на поточній ітерації
 			new_node->num_keys++;
 			full_node->num_keys--;
 		}	
@@ -171,8 +153,9 @@ namespace data_struct_b_tree {
 	}
 
 	template <typename T> void b_tree<T>::print(ostream& os) {
-		dl_list<pair<pair<int, int>, node*>> list;
 		node* current_node = this->root;
+		if (current_node->num_keys == 0) throw error_2("PrintError: b-tree is empty", 14);
+		dl_list<pair<pair<int, int>, node*>> list;
 		int rows = 1;
 		int index_node = 1;
 		int node_in_row = 0;
@@ -233,44 +216,12 @@ namespace data_struct_b_tree {
 				// Якщо поточний вузол не листок, додаю його до списку
 				if (!current_node->leaf) list.push_back(make_pair(make_pair(rows, node_in_row), current_node));
 				index_node++;
-			}
-			
+			}	
 		}
 		os << rows + 1 << "*. --------------------------" << endl;
 		os << "\033[38;2;86;156;214mnullptr\033[0m" << endl;
-
 	}
 
-	template<typename T> T& b_tree<T>::operator[](const T& data) {
-		node* tmp = this->root;
-		if (tmp == nullptr) throw error_2("SearchError: b-tree is empty", 12);
-		while (tmp != nullptr) {
-			int l_side = 0;
-			int r_side = tmp->num_keys - 1;
-			// Якщо data менше за найменший ключ у вузлі
-			if (data < tmp->array_keys[l_side]) {
-				tmp = tmp->children[l_side];
-				continue;
-			}
-			// Якщо data більше за найбільший ключ у вузлі
-			if (data > tmp->array_keys[r_side]) {
-				tmp = tmp->children[tmp->num_keys];
-				continue;
-			}
-			// Бінарний пошук в межах ключів вузла
-			while (l_side <= r_side) {
-				int i = l_side + (r_side - l_side) / 2;
-				if (tmp->array_keys[i] == data) return tmp->array_keys[i];  // Знайдено шуканий ключ
-				if (tmp->array_keys[i] < data) l_side = i + 1;
-				else r_side = i - 1;
-			}
-			// Якщо дійшли до листа і ключ не знайдено
-			if (tmp->leaf) break;
-			// Переміщуємося до відповідної дитини
-			tmp = tmp->children[l_side];
-		}
-		throw error_2("SearchError: there is no such element in the b-tree", 11);
-	}
 	template<typename T> bool b_tree<T>::key_is_in(const T& data) {
 		node* tmp = this->root;
 		if (tmp == nullptr) throw error_2("SearchError: b-tree is empty", 12);
@@ -302,158 +253,180 @@ namespace data_struct_b_tree {
 		return false;
 	}
 
-
 	template <typename T> b_tree<T>::~b_tree() {
 		
 	}
-	int ID = 1;
-	template<typename T> void print(b_tree<T>& qa) {
-		cout << "\033[38;2;128;255;128mSTART: " << ID << "\033[38;2;0;0;255m";
-		for (int i = 0; i < 15; i++) cout << "|||"; cout << "\033[0m" << endl;
-		qa.print(cout);
-		cout << "\033[38;2;128;255;128mEND: " << ID << "\033[38;2;0;0;255m";
-		for (int i = 0; i < 15; i++) cout << "|||"; cout << "\033[0m" << endl;
-		cout << endl << endl << endl;
-		ID++;
-	}
-
+	
+	
 	void test_b_tree() {
+		bool exit_loop_home = false; //зміна для контролю циклу на першому етапі
+		do {
+			cout << "\033[38;2;0;255;0m" << "/home/" << "\033[0m" << endl;
 
+			cout
+				<< "Тестове дерево  \t1 Enter" << endl
+				<< "Нове дерево     \t2 Enter" << endl
+				<< "> ";
+			char b_tree_TestNew = cin.get();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); //ігнорую всі інші символи в буфері до наступного рядка
+			switch (b_tree_TestNew) {
+			case '1': {
+				cout << "\033[38;2;0;255;0m" << "/home/'Тестове дерево'/" << "\033[0m" << endl;
+				b_tree<int> qa(2);
+				qa.add_key(1);
+				qa.add_key(3);
+				qa.add_key(156);
+				qa.add_key(63);
+				qa.add_key(122);
+				qa.add_key(11);
+				qa.add_key(0);
+				qa.add_key(-1);
+				qa.add_key(-111);
+				qa.add_key(23);
+				qa.add_key(1991);
+				qa.add_key(10);
+				qa.add_key(15);
+				qa.add_key(50);
+				qa.add_key(5);
+				qa.add_key(9);
+				qa.add_key(200);
+				qa.add_key(150);
+				qa.add_key(75);
+				qa.add_key(18);
+				qa.add_key(-200);
+				qa.add_key(100);
+				qa.add_key(300);
+				qa.add_key(-50);
+				qa.add_key(-10);
+				try {
+					cout << "\033[38;2;180;180;0mНамагаюсь додати ключ, який вже є в дереві..." << "\033[0m" << endl;
+					qa.add_key(0);
+					cout << "\033[38;2;255;0;0mКлюч додався! Але не повинен був!" << "\033[0m" << endl;
+				}
+				catch (error_2& ex) {
+					cout << "\033[38;2;0;180;0mВставка ключа викликала помилку: " << ex.get_error_msg() << "\033[0m" << endl;
+				}
+				qa.add_key(250);
+				qa.add_key(60);
+				qa.add_key(85);
+				qa.add_key(99);
+				qa.add_key(101);
+				qa.add_key(500);
+				qa.add_key(-500);
+				qa.add_key(350);
+				qa.add_key(175);
+				qa.add_key(225);
+				qa.add_key(30);
+				qa.add_key(130);
+				qa.add_key(40);
+				qa.add_key(220);
+				qa.add_key(-300);
+				qa.add_key(999);
+				qa.add_key(888);
+				qa.add_key(777);
+				qa.add_key(555);
+				qa.add_key(333);
+				qa.add_key(111);
+				qa.add_key(222);
+				qa.add_key(444);
+				qa.print(cout);
+				exit_loop_home = true;
+				break;
+			}
+			case '2': {
+				bool exit_loop_new_tree = false; //зміна для контролю циклу на етапі "Нове дерево"
+				do {
+					cout << "\033[38;2;0;255;0m" << "/home/'Нове дерево'/" << "\033[0m" << endl;
+					int t;
+					cout
+						<< "Параметр t " << endl
+						<< "> ";
+					cin >> t;
+					if (cin.fail() || (t <= 1 || (2 * t) >= INT_MAX)) {
+						cin.clear();
+						cin.ignore(numeric_limits<streamsize>::max(), '\n');
+						cout << "\033[38;2;255;0;0m" << "Помилка! Bведіть ціле число, щоб задовольняло умову: \033[0m(t >= 2 && (2 * t) > INT_MAX)" << endl;
+						continue;
+					} 
+					cout << "Тип з яким працює b-дерево: int" << endl; 
+					b_tree<int> qa(t);
+					bool exit_loop_methods = false;
+					do {
+						cout << "\033[38;2;0;255;0m" << "/home/'Нове дерево'/методи/" << "\033[0m" << endl;
+						cout
+							<< "Додати ключ                    \t 1 Enter" << endl
+							<< "Видалити ключ                  \t 2 Enter" << endl
+							<< "Відобразити структуру b-дерева \t 3 Enter" << endl
+							<< "> ";
+						char b_tree_AdddelPrint = cin.get();
+						if(b_tree_AdddelPrint == '\n') b_tree_AdddelPrint = cin.get(); //ігнорую /n який утворюється при запису t
 
+						cin.ignore(numeric_limits<streamsize>::max(), '\n');
+						switch (b_tree_AdddelPrint) {
+						case '1': {
+							/*додати ключ*/
+							bool exit_loop_methods_addKey = false;
+							do {
+								cout << "\033[38;2;0;255;0m" << "/home/'Нове дерево'/методи/'додати ключ'" << "\033[0m" << endl;
+								cout << "> ";
+								int key;
+								cin >> key;
+								if (cin.fail() || (key <= INT_MIN || key >= INT_MAX)) {
+									cin.clear();
+									cin.ignore(numeric_limits<streamsize>::max(), '\n');
+									cout << "\033[38;2;255;0;0m" << "Помилка! Bведіть ціле число, щоб задовольняло умову: \033[0m(key <= INT_MIN || key >= INT_MAX)" << endl;
+									continue;
+								}
+								try {
+									qa.add_key(key);
+								}
+								catch (error_2& ex) {
+									cout 
+										<< "\033[38;2;255;0;0mКлюч не додано! Причина - " 
+									    << ex.get_error_msg() << "\033[0m " << ex.get_error_code() << endl;
+								}
+								exit_loop_methods_addKey = true;
+							} while (!exit_loop_methods_addKey);
+							continue;
+						}
+						case '2': {
+							/*видалити ключ*/
+							cout << "\033[38;2;0;255;0m" << "/home/'Нове дерево'/методи/'видалити ключ'" << "\033[0m" << endl;
+							//тут повинно бути видалення ключа яке ще не реалізоване :(
+							continue;
+						}
+						case '3': {
+							/*відобразити дерево*/
+							cout << "\033[38;2;0;255;0m" << "/home/'Нове дерево'/методи/'Відобразити дерево'" << "\033[0m" << endl;
+							try {
+								qa.print(cout);
+							}
+							catch (error_2& ex) {
+								cout
+									<< "\033[38;2;255;0;0mНе можливо відобразити дерево! Причина - "
+									<< ex.get_error_msg() << "\033[0m " << ex.get_error_code() << endl;
+							}
+							continue;
+						}
+						default: {
+							cout << "\033[38;2;255;0;0m" << "Помилка! Обрано не вірний пункт" << "\033[0m" << endl;
+							continue;
+						}
+						}
+						exit_loop_methods = true;
+					} while (!exit_loop_methods);
 
-		b_tree<int> qa(2); // Створюємо B-дерево з t=2
-
-		// Вставляємо ключі в дерево
-		qa.add_key(1);
-		print(qa);
-		qa.add_key(3);
-		print(qa);
-		qa.add_key(156);
-		print(qa);
-		qa.add_key(63);
-		print(qa);
-		qa.add_key(122);
-		print(qa);
-		qa.add_key(11);
-		print(qa);
-		qa.add_key(0);
-		print(qa);
-		qa.add_key(-1);
-		print(qa);
-		qa.add_key(-111);
-		print(qa);
-		qa.add_key(23);
-		print(qa);
-		qa.add_key(1991);
-		print(qa);
-		qa.add_key(10);
-		print(qa);
-		// Додаємо ключі, що змусять дерево виконати кілька розбиттів
-		qa.add_key(15);
-		print(qa);
-		qa.add_key(50);
-		print(qa);
-		qa.add_key(5);
-		print(qa);
-		qa.add_key(9);
-		print(qa);
-		qa.add_key(200);
-		print(qa);
-		qa.add_key(150);
-		print(qa);
-		qa.add_key(75);
-		print(qa);
-		qa.add_key(18);
-		print(qa);
-		// Перевірка для від'ємних та граничних значень
-		qa.add_key(-200);
-		print(qa);
-		qa.add_key(100);
-		print(qa);
-		qa.add_key(300);
-		print(qa);
-		qa.add_key(-50);
-		print(qa);
-		qa.add_key(-10);
-		print(qa);
-		try
-		{
-			cout << "Намагаюсь додати ключ, який вже є в дереві" << endl;
-			qa.add_key(0);  // Перевірка на дублювання (передбачається, що дублювання заборонено)
-			cout << "Ключ додався! Але не повинен був!" << endl;
-		}
-		catch (error_2& ex)
-		{
-			cout << "вставка ключа викликала помилку: " << ex.get_error_msg() << endl;
-		}
-		qa.add_key(250);
-		print(qa);
-		qa.add_key(60);
-		print(qa);
-		qa.add_key(85);
-		print(qa);
-		qa.add_key(99);
-		print(qa);
-		qa.add_key(101);
-		print(qa);
-
-		// Додаємо більше випадкових ключів
-		qa.add_key(500);
-		print(qa);
-		qa.add_key(-500);
-		print(qa);
-		qa.add_key(350);
-		print(qa);
-		qa.add_key(175);
-		print(qa);
-		qa.add_key(225);
-		print(qa);
-		qa.add_key(30);
-		print(qa);
-		qa.add_key(130);
-		print(qa);
-		qa.add_key(40);
-		print(qa);
-		qa.add_key(220);
-		print(qa);
-		qa.add_key(-300);
-		print(qa);
-
-		try
-		{
-			cout << "Намагаюсь додати ключ, який вже є в дереві" << endl;
-			qa.add_key(0);  // Перевірка на дублювання (передбачається, що дублювання заборонено)
-			cout << "Ключ додався! Але не повинен був!" << endl;
-		}
-		catch (error_2& ex)
-		{
-			cout << "вставка ключа викликала помилку: " << ex.get_error_msg() << endl;
-		}
-
-		// Перевіряємо ще одну серію ключів для впевненості
-		qa.add_key(999);
-		print(qa);
-		qa.add_key(888);
-		print(qa);
-		qa.add_key(777);
-		print(qa);
-		qa.add_key(555);
-		print(qa);
-		qa.add_key(333);
-		print(qa);
-		qa.add_key(111);
-		print(qa);
-		qa.add_key(222);
-		print(qa);
-		qa.add_key(444);
-		print(qa);
-
-
-		
-
-
-		
-		
+					exit_loop_new_tree = true;
+				} while (!exit_loop_new_tree);
+				exit_loop_home = true;
+				break;
+			}
+			default: {
+				cout << "\033[38;2;255;0;0m" << "Помилка! Обрано не вірний пункт" << "\033[0m" << endl;
+				continue;
+			}
+			}
+		} while (!exit_loop_home);
 	}
 }
 

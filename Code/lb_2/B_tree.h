@@ -23,15 +23,14 @@ namespace data_struct_b_tree {
 		typename b_tree<T>::node* split_node(node*);
 		bool key_is_in(const T&); //перевірка чи ключ є в дереві
 	public:
-
-		b_tree(const int&); //параметр const int& для передачі t
+		void add_key(const T&);
 		void print(ostream&);
-		T& operator[](const T&);//шукаю елемент за значенням
+
 		
+		b_tree(const int&); //параметр const int& для передачі t
 		~b_tree(); 
 
 
-		void add_key(const T&);
 
 	};
 }
