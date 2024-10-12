@@ -16,22 +16,16 @@ namespace data_struct_b_tree {
 			bool leaf = false; //true якщо вузол листок, і  false якщо ні
 			int num_keys = 0;
 			node* father = nullptr;
-			node(const int &, const bool&, node*);
-			~node();
-			
+			node(const int &, const bool&, node*);	
 		}*root = nullptr;
 		typename b_tree<T>::node* split_node(node*);
 		bool key_is_in(const T&); //перевірка чи ключ є в дереві
+		void del_all_nodes(node*);//рекурсивне видалення всіх вузлів
 	public:
 		void add_key(const T&);
 		void print(ostream&);
-
-		
 		b_tree(const int&); //параметр const int& для передачі t
 		~b_tree(); 
-
-
-
 	};
 }
 #endif // !B_tree

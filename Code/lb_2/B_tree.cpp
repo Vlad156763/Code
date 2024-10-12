@@ -28,13 +28,6 @@ namespace data_struct_b_tree {
 		this->father = father;
 	}
 
-	template <typename T> b_tree<T>::node::~node() {
-		delete[] array_keys;
-		for (int i = 0; i < this->max_number_of_keys; i++)
-			delete this->children[i];
-		delete[] this->children;
-	}
-
 	template <typename T> b_tree<T>::b_tree(const int& t) {
 		if (t <= 1 || t * 2 >= INT_MAX) throw error_2("FatalError: the number of keys is not valid for b-tree", 201);
 		this->max_num_keys = 2 * t;
@@ -252,11 +245,28 @@ namespace data_struct_b_tree {
 		}
 		return false;
 	}
-
 	template <typename T> b_tree<T>::~b_tree() {
-		
+		if (this->root != nullptr) {
+			del_all_nodes(this->root);
+			delete this->root;  
+		}
 	}
-	
+	template <typename T> void b_tree<T>::del_all_nodes(node* current_node_del) {
+		// Якщо вузол не є листком, рекурсивно видаляю дітей
+		if (!current_node_del->leaf) 
+			for (int i = 0; i <= current_node_del->num_keys; i++) 
+				if (current_node_del->children[i] != nullptr) {
+					del_all_nodes(current_node_del->children[i]);
+					delete current_node_del->children[i];
+				}
+
+		// Видаляю масив ключів і масив покажчиків на дітей
+		//масив покажчиків у листку завжди nullptr, тому видаляти дітей для нього не має сенсу
+		delete[] current_node_del->array_keys;
+		delete[] current_node_del->children;
+		//father не видаляю бо не можна. Це порушить рекурсивне видалення
+	}
+
 	
 	void test_b_tree() {
 		bool exit_loop_home = false; //зміна для контролю циклу на першому етапі
