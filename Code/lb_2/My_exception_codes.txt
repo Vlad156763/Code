@@ -12,11 +12,20 @@ This file has exception codes and their explanations
 }
 
 13 {
-    Помилка пошуку, в дереві не може бути більше одного однакових значень
-    SearchError: there cannot be more than one identical value in the b-tree 
+    Помилка додавання, в дереві не може бути більше одного однакових значень
+    AddError: there cannot be more than one identical value in the b-tree 
 }
 
 14 {
     Помилка відображення. Дерево пусте
     PrintError: b-tree is empty
+}
+
+15 {
+    Помилка видалення. Ключа не має
+    DeleteError: b-tree has no delete key
+}
+ -1 {
+    Фатальна помилка. Перевірте, чи правильно ви видаляєте
+	вузол, тому що видаляючий вузол має дітей!    FatalError: The node that tried to delete has children, which is not allowed!
 }
