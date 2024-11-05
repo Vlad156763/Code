@@ -40,7 +40,7 @@ namespace my_exceptions_2 {
 			<< "}\n"
 			<< " -1 {\n"
 			<< "    Фатальна помилка. Перевірте, чи правильно ви видаляєте\n"
-			<< "	вузол, тому що видаляючий вузол має дітей!"
+			<< "	вузол, тому що видаляючий вузол має дітей!\n"
 			<< "    FatalError: The node that tried to delete has children, which is not allowed!\n"
 			<< "}\n";
 		My_exception_codes.close();
