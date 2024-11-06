@@ -27,5 +27,6 @@ This file has exception codes and their explanations
 }
  -1 {
     Фатальна помилка. Перевірте, чи правильно ви видаляєте
-	вузол, тому що видаляючий вузол має дітей!    FatalError: The node that tried to delete has children, which is not allowed!
+	вузол, тому що видаляючий вузол має дітей!
+    FatalError: The node that tried to delete has children, which is not allowed!
 }
