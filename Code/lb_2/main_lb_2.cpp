@@ -266,20 +266,6 @@ namespace task_2 {
 			}
 		} while (!exit_loop_methods);
 	}
-	//TODO: B-tree Г
-	/* Щоденник погоди містить інформацію, що складається з
-	дати, температури, вологості повітря, напрямку вітру, атмосферних явищ, атмосферного тиску, рівня опадів.
-	На основі даних щоденника погоди сформувати дерево.
-	Визначити інформацію про погоду за вказану користувачем дату.
-	Визначити день заданого місяця, коли рівень опадів був найвищий.*/
-	/*
-	користувач вказує дату - за цією датою мені треба знайти всю інформацію 
-	користувач вказує /місяць, а я повинен повернути день, який мав найбільше опадів 
-
-	приклад:
-	створюється пусте дерево на 31 комірку (для днів)
-	це дерево максимум може мати 12 вузлів, 
-	*/
 	diary_weather::data_s::data_s(const int& day, const int& month) {
 		this->day = day;
 		this->month = month;
@@ -365,6 +351,19 @@ namespace task_2 {
 		}
 		return os;
 	}
+	ostream& diary_weather::print(ostream& os) const {
+		os
+			<< "\033[38;2;63;143;139m"
+			<< this->data.day << "/" << this->data.month << "/2024" << endl << "\033[0m"
+			<< "Температура:    " << this->temperature << " °C" << endl
+			<< "Вологість:      " << this->vologist << "%" << endl
+			<< "Напрямок вітру: " << this->windDirection << endl
+			<< "Погодні явища:  " << this->weatherEvents << endl
+			<< "Тиск:           " << this->pressure << " мм рт. ст." << endl
+			<< "Опади:          " << this->opady << " мм" << endl;
+		return os;
+	}
+
 	void taskG_Btree(bool& exit_loop_home, dl_list<const char*>& way, bool& main_home_exit) {
 		bool exitLoopTask = false;
 		way.push_back("task_G/");
@@ -380,7 +379,7 @@ namespace task_2 {
 			тиск
 			опади
 			*/
-			srand(time(0));
+			srand(static_cast<unsigned int>(time(0)));
 			cout << "Наповнення щоденника фальшивими данними..." << endl;
 			for (int month = 1; month < 12; month++) {
 				for (int day = 1; day < 15; day++) {
@@ -392,7 +391,7 @@ namespace task_2 {
 							static_cast<diary_weather::wind_direction>(rand() % 9),
 							"Сонячно",
 							rand() % 80 + 710,
-							rand() % 11
+							rand() % 501
 						)
 					);
 				}
@@ -457,8 +456,12 @@ namespace task_2 {
 						continue;
 					}
 					cin.ignore(numeric_limits<streamsize>::max(), '\n');
-					//Todo: зробити запит у b-дерево і виводити дані за днем і місяцем
-					
+					try { 
+						diary_weather obj = diary.search_key(diary_weather(given_day, given_month));
+						obj.print(cout);
+					}
+					catch (error_2& ex) { cout << "\033[38;2;255;0;0mПомилка! Причина - " << ex.get_error_msg() << "\033[0m " << ex.get_error_code() << endl; }
+
 					exitLoopWeatherGivenDay = true;
 				} while (!exitLoopWeatherGivenDay);
 				break;
@@ -485,7 +488,27 @@ namespace task_2 {
 						continue;
 					}
 					cin.ignore(numeric_limits<streamsize>::max(), '\n');
-					//Todo: зробити пошук за заданим місяцем і повернути день, в який опадів було найбільше
+					// шукаю всі дні із заданого місяця
+					dl_list<diary_weather> list_diary;
+
+					for (int i = 1; i <= 31; i++) {
+						try {
+							//якщо дати i/month немає в щоденнику - кидається виключення
+							diary_weather tmp = diary.search_key(diary_weather(i, month));
+							//якщо все ж знайдено ключ, який має i/month записую його у список
+							list_diary.push_back(tmp);
+						} 
+						//якщо кинуто виключення, нічого не відбувається, тому що основна задача тут - знайти всі дні (які є в щоденику) за поточним місяцем
+						catch (error_2& ex) {}
+					}
+					//в списку перебрати всі ключі і визначити який має найбільше опадів
+					//виводжу всі дні, які мають заданий місяць
+					diary_weather maxDay = list_diary[0];
+					for (int i = 0; i + 1 < list_diary.get_size(); i++) 
+						if (maxDay.opady < list_diary[i + 1].opady) maxDay = list_diary[i + 1];
+					maxDay.print(cout);
+					
+					
 					exitLoopMaxOpady = true;
 				} while (!exitLoopMaxOpady);
 				break;

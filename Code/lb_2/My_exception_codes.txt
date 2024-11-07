@@ -25,6 +25,12 @@ This file has exception codes and their explanations
     Помилка видалення. Ключа не має
     DeleteError: b-tree has no delete key
 }
+
+ 16 {
+    Помилка пошуку, не знайдено ключ 
+    SearchError: b-tree has no target key
+}
+
  -1 {
     Фатальна помилка. Перевірте, чи правильно ви видаляєте
 	вузол, тому що видаляючий вузол має дітей!

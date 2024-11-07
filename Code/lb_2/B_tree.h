@@ -54,6 +54,7 @@ namespace data_struct_b_tree {
 	public:
 		void add_key(const T&);
 		void del_key(const T&);
+		T search_key(const T&);
 		void print(ostream&);
 		b_tree(const int&); //параметр const int& для передачі t
 		~b_tree(); 
@@ -295,6 +296,15 @@ template <typename T> typename b_tree<T>::node* b_tree<T>::key_is_in(const T& da
 		}
 		return nullptr;
 	}
+template <typename T> T b_tree<T>::search_key(const T& key) {
+	node* node_key = this->key_is_in(key);
+	if (node_key == nullptr) throw error_2("SearchError: b-tree has no target key", 16);
+	//шукаю в поточному вузлі ключ
+	int i = 0;
+	for (; !(node_key->array_keys[i] == key); i++);
+	return node_key->array_keys[i];
+
+}
 template <typename T> b_tree<T>::~b_tree() {
 		if (this->root != nullptr) {
 			del_all_nodes(this->root);

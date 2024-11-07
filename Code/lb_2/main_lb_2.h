@@ -57,18 +57,14 @@ namespace task_2 {
 		diary_weather();
 		//даний конструктор треба для пошуку у дереві (так як порівняння елементів відбувається за допомогою дати 
 		diary_weather(const int&, const int&);
-		template<typename T> void accessPrivateMethod(b_tree<T>& obj) {
-			// Створюю вказівник на метод 
-			void (b_tree<T>::* methodPtr)() = &b_tree<T>::key_is_in;
-			// Виклика. приватний метод через вказівник
-			(obj.*methodPtr)();
-		}
+		ostream& print(ostream&) const;
 	
 		bool operator > (const diary_weather&) const;
 		bool operator < (const diary_weather&) const;
 		bool operator ==(const diary_weather&) const;
 		friend ostream& operator << (ostream&, const diary_weather&);
 		friend ostream& operator << (ostream&, const wind_direction&);
+		friend void taskG_Btree(bool&, dl_list<const char*>&, bool&);
 	};
 }
 
