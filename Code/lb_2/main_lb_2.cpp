@@ -26,10 +26,7 @@ namespace task_2 {
 				break;
 			}
 			case'2': {
-				//Fhome_HachTable(way, exit_loop_home);
-				//Fhome_HachTable(way, exit_loop_home);
-				//Fhome_HachTable(way, exit_loop_home);
-				cout << "\033[38;2;255;0;0mНе зроблено! Вибачте :(\033[0m" << endl;
+				Fhome_HachTable(way, exit_loop_home);
 				break;
 			}
 			default:
@@ -271,15 +268,7 @@ namespace task_2 {
 		this->month = month;
 	}
 	diary_weather::data_s::data_s() {}
-	diary_weather::diary_weather(
-		const int& day,
-		const int& month,
-		const double& temperature,
-		const double& vologist,
-		wind_direction windDirection,
-		const string& weatherEvents,
-		const int& pressure,
-		const double& opady) : data(data_s(day, month)) {
+	diary_weather::diary_weather(const int& day,const int& month,const double& temperature,const double& vologist,wind_direction windDirection,const string& weatherEvents,const int& pressure,const double& opady) : data(data_s(day, month)) {
 		this->temperature = temperature;
 		this->vologist = vologist;
 		this->windDirection = windDirection;
@@ -363,7 +352,6 @@ namespace task_2 {
 			<< "Опади:          " << this->opady << " мм" << endl;
 		return os;
 	}
-
 	void taskG_Btree(bool& exit_loop_home, dl_list<const char*>& way, bool& main_home_exit) {
 		bool exitLoopTask = false;
 		way.push_back("task_G/");
@@ -499,7 +487,7 @@ namespace task_2 {
 							list_diary.push_back(tmp);
 						} 
 						//якщо кинуто виключення, нічого не відбувається, тому що основна задача тут - знайти всі дні (які є в щоденику) за поточним місяцем
-						catch (error_2& ex) {}
+						catch (...) {}
 					}
 					//в списку перебрати всі ключі і визначити який має найбільше опадів
 					//виводжу всі дні, які мають заданий місяць
@@ -527,4 +515,41 @@ namespace task_2 {
 		} while (!exitLoopTask);
 		
 	}
+
+	static void Fhome_HachTable(dl_list<const char*>& way, bool& main_home_exit) {
+		bool exit_loop_home = false; 
+		way.push_back("Hesh_table_home/");
+		do {
+			cout << "\033[38;2;100;100;255m";
+			for (int i = 0; i < way.get_size(); i++) cout << way[i];
+			cout << "\033[0m" << endl;
+			cout
+				<< "Завершити програму    \t0 Enter" << endl
+				//todo: наче все працює залишилось завдання Г і додати тестову перевірку сюди
+				<< "Повернутись на /home/ \t4 Enter" << endl
+				<< "> ";
+			char tmp = cin.get();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n'); //ігнорую всі інші символи в буфері до наступного рядка
+			switch (tmp) {
+			case '0': {
+				main_home_exit = true;
+				return;
+			}
+			case '1': {
+				
+				break;
+			}
+			case'4': {
+				main_home_exit = false;
+				way.pop_back();
+				return;
+			}
+			default: {
+				cout << "\033[38;2;255;0;0m" << "Помилка! Обрано не вірний пункт" << "\033[0m" << endl;
+				continue;
+			}
+			}
+		} while (!exit_loop_home);
+	}
+
 }

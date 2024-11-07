@@ -36,3 +36,13 @@ This file has exception codes and their explanations
 	вузол, тому що видаляючий вузол має дітей!
     FatalError: The node that tried to delete has children, which is not allowed!
 }
+
+ 17 {
+    Хеш-Таблиця заповнена
+    AddError: Hash table is full!
+}
+
+ 18 {
+    Хеш-Таблиця не має ввденеого ключа
+    SearchError: Hash Table has no target key
+}

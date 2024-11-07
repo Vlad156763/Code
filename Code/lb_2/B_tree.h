@@ -43,12 +43,8 @@ namespace data_struct_b_tree {
 		node* split_node(node*); //розділення вузлів
 		node* key_is_in(const T&); //перевірка чи ключ є в дереві
 		void del_all_nodes(node*);//рекурсивне видалення всіх вузлів
-
-		//об'єднання вузлів
-		void merge(node*, const int&, const int&);
-		//позика у брата (перший параметр це покажчик на поточний вузол, другий параметр це індекс вузла відносно батька
-		void borrow(node*, const int&, const int&);
-		//видалення з листка
+		void merge(node*, const int&, const int&);//об'єднання вузлів		
+		void borrow(node*, const int&, const int&);//позика у брата (перший параметр це покажчик на поточний вузол, другий параметр це індекс вузла відносно батька
 		void deletedKeyFromLeaf(node*, const int&, const int&);
 		void deletedKeyFromNotLeaf(node*, const int&);
 	public:
@@ -63,7 +59,7 @@ namespace data_struct_b_tree {
 static ostream& tab(ostream& os);
 
 static ostream& tab(ostream& os) {
-	return os << '\t';
+	return os << "    ";
 }
 using namespace data_struct_b_tree;
 template <typename T> b_tree<T>::node::node(const int& order, const bool& leaf, node* father) {

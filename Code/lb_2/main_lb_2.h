@@ -3,6 +3,7 @@
 #include "Exception_for_lb_2.h"
 #include "../lb_1/Data_structures.h"
 #include "B_tree.h"
+#include "hashTable.h"
 #include <iostream>
 #include <string>
 #include <cstdlib>
@@ -17,12 +18,26 @@ using std::numeric_limits;
 using std::streamsize;
 namespace task_2 {
 	void main_test_all_files();
+	
+	//todo: В-дерево
+	/*
+	Клас, що реалізує B-дерево, має дозволяти виконувати
+	наступні операції на основі окремих методів: створення порожнього
+	дерева, відображення структури дерева, пошук у дереві, вставлення
+	ключа, видалення ключа.
+	Завдання Г
+	Щоденник погоди містить інформацію, що складається з дати,
+	температури, вологості повітря, напрямку вітру, атмосферних явищ,
+	атмосферного тиску, рівня опадів. На основі даних щоденника погоди
+	сформувати дерево. Визначити інформацію про погоду за вказану
+	користувачем дату. Визначити день заданого місяця, коли рівень
+	опадів був найвищий.
+	*/
 	static void Fhome_Btree(dl_list<const char*>&, bool&);
 	static void Fhome_testTree(b_tree<int>&, dl_list<const char*>&);
 	static int Fhome_newTree(dl_list<const char*>&);
 	static void Fhome_tree_methods(b_tree<int>&, bool&, dl_list<const char*>&, bool&);
 	static void taskG_Btree(bool&, dl_list<const char*>&, bool&);
-
 	class diary_weather {
 	public: 	
 		enum wind_direction {
@@ -66,6 +81,23 @@ namespace task_2 {
 		friend ostream& operator << (ostream&, const wind_direction&);
 		friend void taskG_Btree(bool&, dl_list<const char*>&, bool&);
 	};
+	//todo: Геш-таблиця
+	/*
+	Клас, що реалізує геш-таблицю, має дозволяти
+	виконувати наступні операції на основі окремих методів: 
+	вставлення елементу, видалення елементу, пошук елементу, відображення
+	структури геш-таблиці на основі використання параметрів, обраних у
+	відповідності з варіантом індивідуального завдання з п. 2.3.4.
+	Завдання Г
+	Створити геш-таблицю, що використовує метод відкритої
+	адресації для розв’язання колізій, геш-функцію множення та метод
+	квадратичного дослідження для обчислення послідовностей
+	досліджень. Геш-таблицю заповнити на основі виділення інформації з
+	текстового файлу, в якому містяться ідентифікаційні номери
+	платників податків та їх прізвища, імена і по батькові. Визначити
+	платника податку за заданим ідентифікаційним номером.
+	*/
+	static void Fhome_HachTable(dl_list<const char*>&, bool&);
 }
 
 #endif //!main_lb_2

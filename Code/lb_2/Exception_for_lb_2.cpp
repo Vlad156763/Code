@@ -5,8 +5,8 @@ using std::ofstream;
 namespace my_exceptions_2 {
 	error_2::error_2(const char* msg, const int& code)
 	: error_msg(msg), error_code(code) {}
-	int error_2::get_error_code() {return this->error_code;}
-	const char* error_2::get_error_msg() {return this->error_msg;}
+	int error_2::get_error_code() const {return this->error_code;}
+	const char* error_2::get_error_msg() const {return this->error_msg;}
 	void My_exception_codes_file () {
 		ofstream My_exception_codes("lb_2/My_exception_codes.txt");
 		if (!My_exception_codes.is_open()) throw error_2("FileError: could not open file for writing", 207);
@@ -48,7 +48,18 @@ namespace my_exceptions_2 {
 			<< "    Фатальна помилка. Перевірте, чи правильно ви видаляєте\n"
 			<< "	вузол, тому що видаляючий вузол має дітей!\n"
 			<< "    FatalError: The node that tried to delete has children, which is not allowed!\n"
+			<< "}\n"
+			<< "\n"
+			<< " 17 {\n"
+			<< "    Хеш-Таблиця заповнена\n"
+			<< "    AddError: Hash table is full!\n"
+			<< "}\n"
+			<< "\n"
+			<< " 18 {\n"
+			<< "    Хеш-Таблиця не має ввденеого ключа\n"
+			<< "    SearchError: Hash Table has no target key\n"
 			<< "}\n";
+
 		My_exception_codes.close();
 	}
 }
