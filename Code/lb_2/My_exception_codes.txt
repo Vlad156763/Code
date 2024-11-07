@@ -10,7 +10,29 @@ This file has exception codes and their explanations
     Помилка пошуку, дерево пусте
     SearchError: b-tree is empty
 }
-11 {
-    Помилка пошуку, ключа немає у дереві
-    SearchError: there is no such element in the b-tree
+
+13 {
+    Помилка додавання, в дереві не може бути більше одного однакових значень
+    AddError: there cannot be more than one identical value in the b-tree 
+}
+
+14 {
+    Помилка відображення. Дерево пусте
+    PrintError: b-tree is empty
+}
+
+15 {
+    Помилка видалення. Ключа не має
+    DeleteError: b-tree has no delete key
+}
+
+ 16 {
+    Помилка пошуку, не знайдено ключ 
+    SearchError: b-tree has no target key
+}
+
+ -1 {
+    Фатальна помилка. Перевірте, чи правильно ви видаляєте
+	вузол, тому що видаляючий вузол має дітей!
+    FatalError: The node that tried to delete has children, which is not allowed!
 }
