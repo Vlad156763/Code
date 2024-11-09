@@ -4,6 +4,7 @@
 #include <iostream>
 using namespace my_exceptions;
 using std::ostream;
+using std::istream;
 
 namespace data_struct {
 	void main_test_dl_list(ostream&);
@@ -21,23 +22,30 @@ namespace data_struct {
 			~node();
 		}*first_node = nullptr, * last_node = nullptr;
 		node* search(const int&);
+		const node* search(const int&) const;
 	public:
 		dl_list();
+		dl_list(const dl_list<T>&);
 		~dl_list();
 
 		void push_front(const T&); //додавання вузла на початок
 		void insert(const T&, const int&); //вставка вузла за індексом 
 		void push_back(const T&);//додавання вузла в кінець
 		bool is_empty(); //якщо голова пуста, повертаю false
-
 		void pop_front(); //видалення вузла на початку
 		void remove_at(const int&); //видалення вузла за індексом
 		void pop_back(); //видалення вузла в кінці
+		void clear(); //видалення всіх вузлів
 		void print_from_end(ostream&) const;
 		void print_from_start(ostream&) const;
+		void print_withoutSpace(ostream&)const;
+		dl_list& operator = (const dl_list<T>&);
+		template<typename T1> friend ostream& operator << (ostream&, const dl_list<T1>&);
+
 		T& front();
 		int get_size();
 		T& operator [] (const int&);
+		const T& operator [] (const int&)const;
 	};
 
 	template <typename T> class priory_queue_heap {
@@ -64,14 +72,12 @@ namespace data_struct {
 		void sift_down(const int& = 0);
 	};
 
-
-
 	template <typename T> priory_queue_heap<T>::priory_queue_heap() {}
 	template <typename T> priory_queue_heap<T>::priory_queue_heap(const priory_queue_heap<T>::node* array_pa, const int& size) {
 		for (int i = 0; i < size; i++)
 			this->add(array_pa[i].value, array_pa[i].priory);
 	}
-	template<typename T> priory_queue_heap<T>& priory_queue_heap<T>::operator=(const priory_queue_heap<T>& other) {
+	template <typename T> priory_queue_heap<T>& priory_queue_heap<T>::operator=(const priory_queue_heap<T>& other) {
 		if (this != &other) {  // Перевірка на самоприсвоєння
 			delete[] this->array;
 			this->size = other.size;
@@ -83,14 +89,14 @@ namespace data_struct {
 		}
 		return this;
 	}
-	template<typename T> priory_queue_heap<T>::priory_queue_heap(const priory_queue_heap<T>& other) : size(other.size) {
+	template <typename T> priory_queue_heap<T>::priory_queue_heap(const priory_queue_heap<T>& other) : size(other.size) {
 		if (other.array != nullptr) {
 			this->array = new node[other.size];
 			for (int i = 0; i < other.size; i++)
 				this->array[i] = other.array[i];
 		}
 	}
-	template<typename T> void priory_queue_heap<T>::del(const int& index) {
+	template <typename T> void priory_queue_heap<T>::del(const int& index) {
 		if (index >= 0 && index < this->size) {
 			if (index != 0) {
 				this->array[index] = this->array[this->size - 1];
@@ -106,7 +112,7 @@ namespace data_struct {
 		}
 		else throw my_exceptions::error("DeleteError: attempting to delete a non-existent element", 202);
 	}
-	template<typename T> T priory_queue_heap<T>::get() {
+	template <typename T> T priory_queue_heap<T>::get() {
 		if (this->array != nullptr) {
 			T value = this->array[0].value;
 			this->array[0] = this->array[this->size - 1];
@@ -116,7 +122,7 @@ namespace data_struct {
 		}
 		else throw my_exceptions::error("GetError: heap is empty", 204);
 	}
-	template<typename T> priory_queue_heap<T>::~priory_queue_heap() {
+	template <typename T> priory_queue_heap<T>::~priory_queue_heap() {
 		if (array != nullptr)  delete[] this->array;
 	}
 	template <typename T> void priory_queue_heap<T>::sift_up() {
@@ -165,7 +171,7 @@ namespace data_struct {
 		this->size++;
 		this->sift_up();
 	}
-	template<typename T1> ostream& operator << (ostream& os, const priory_queue_heap<T1>& obj) {
+	template <typename T1> ostream& operator << (ostream& os, const priory_queue_heap<T1>& obj) {
 		if (obj.array != nullptr) {
 			for (int i = 0; i < obj.size; i++) os << '[' << obj.array[i].value << " (" << obj.array[i].priory << ')' << ']' << "  ";
 		}
@@ -173,35 +179,39 @@ namespace data_struct {
 		return os;
 	}
 
+
 	template <typename T> bool dl_list<T>::is_empty() {
 		return (this->first_node == nullptr) ? true : false;
 	}
 	template <typename T> T& dl_list<T>::front() {
 		if (this->first_node == nullptr) throw error(" GetError: list is empty", 209);
-			return this->first_node->value;
+		return this->first_node->value;
 	}
-
-
-	template <typename T> dl_list<T>::node::node
-	(const T& data, node* next_node_pa, node* prev_node_pa)
+	template <typename T> dl_list<T>::node::node (const T& data, node* next_node_pa, node* prev_node_pa)
 		:value(data), next_node(next_node_pa), prev_node(prev_node_pa) {}
-	template<typename T> dl_list<T>::node::~node() {
+	template <typename T> dl_list<T>::node::~node() {
 		this->next_node = nullptr;
 		this->prev_node = nullptr;
 	}
-	template<typename T> dl_list<T>::dl_list() {}
-	template<typename T> dl_list<T>::~dl_list() {
+	template <typename T> dl_list<T>::dl_list() {}
+	template <typename T> dl_list<T>::~dl_list() {
 		while (this->first_node != nullptr)
 			this->pop_front();
 	}
-	template<typename T> void dl_list<T>::push_front(const T& data) {
+	template <typename T> dl_list<T>::dl_list(const dl_list<T>& other) {
+		this->clear();
+		for (int i = 0; i < other.size; i++) {
+			this->push_back(other[i]);
+		}
+	}
+	template <typename T> void dl_list<T>::push_front(const T& data) {
 		node* new_node = new node(data, this->first_node);
 		if (this->first_node != nullptr) this->first_node->prev_node = new_node;
 		else  this->last_node = new_node;
 		this->first_node = new_node;
 		this->size++;
 	}
-	template<typename T> void dl_list<T>::pop_front() {
+	template <typename T> void dl_list<T>::pop_front() {
 		if (this->first_node != nullptr) {
 			node* tmp = this->first_node;
 			this->first_node = this->first_node->next_node;
@@ -230,7 +240,7 @@ namespace data_struct {
 		}
 		else throw my_exceptions::error("DeleteError: attempting to delete a non-existent element", 202);
 	}
-	template<typename T> void dl_list<T>::insert(const T& data, const int& index) {
+	template <typename T> void dl_list<T>::insert(const T& data, const int& index) {
 		if (index >= 0 && index <= this->size) {
 			if (index == 0) this->push_front(data);
 			else if (index == this->size) this->push_back(data);
@@ -273,6 +283,23 @@ namespace data_struct {
 		}
 		else throw my_exceptions::error("IndexError: list index out of range", 201);
 	}
+	template <typename T> const typename dl_list<T>::node* dl_list<T>::search(const int& index) const{
+		if (index >= 0 && index < this->size) {
+			node* tmp;
+			/*якщо новий елемент знаходиться ближче до початку*/
+			if (index <= this->size / 2) {
+				tmp = this->first_node;
+				/* tmp не може дорівнювати nullptr, тому що index вже є в діапазоні від 0 до this->size*/
+				for (int i = 0; i < index; ++i) tmp = tmp->next_node;
+			}
+			else {
+				tmp = this->last_node;
+				for (int i = this->size - 1; i > index; --i) tmp = tmp->prev_node;
+			}
+			return tmp;
+		}
+		else throw my_exceptions::error("IndexError: list index out of range", 201);
+	}
 	template <typename T> void dl_list<T>::remove_at(const int& index) {
 		try {
 			node* tmp = this->search(index);
@@ -290,16 +317,17 @@ namespace data_struct {
 		}
 		catch (my_exceptions::error& er) {
 			//перевіряю чи точно мій метод кинув виключення, а не службова якась штучка
-			if(er.get_error_code() == 201) throw my_exceptions::error("DeleteError: attempting to delete a non-existent element", 202);
+			if (er.get_error_code() == 201) throw my_exceptions::error("DeleteError: attempting to delete a non-existent element", 202);
 		}
 	}
 	template <typename T> void dl_list<T>::print_from_start(ostream& os) const {
 		if (this->first_node != nullptr) {
 			typename dl_list<T>::node* tmp = this->first_node;
-			while (tmp != nullptr) {
+			while (tmp->next_node != nullptr) {
 				os << tmp->value << ' ';
 				tmp = tmp->next_node;
 			}
+			os << tmp->value;
 		}
 		else throw my_exceptions::error("DisplayError: list is empty", 203);
 	}
@@ -313,7 +341,37 @@ namespace data_struct {
 		}
 		else throw my_exceptions::error("DisplayError: list is empty", 203);
 	}
+	template <typename T> void dl_list<T>::print_withoutSpace(ostream& os) const {
+		if (this->first_node != nullptr) {
+			typename dl_list<T>::node* tmp = this->first_node;
+			while (tmp != nullptr) {
+				os << tmp->value;
+				tmp = tmp->next_node;
+			}
+		}
+		else throw my_exceptions::error("DisplayError: list is empty", 203);
+	}
 	template <typename T> T& dl_list<T>::operator [] (const int& index) { return search(index)->value; }
+	template <typename T> const T& dl_list<T>::operator [] (const int& index) const { return search(index)->value; }
 	template <typename T> int dl_list<T>::get_size() { return this->size; }
+	template <typename T> ostream& operator << (ostream& os, const dl_list<T>& obj) {
+		obj.print_withoutSpace(os);
+		return os;
+	}
+	template <typename T> void dl_list<T>::clear() {
+		while (!this->is_empty()) {
+			this->pop_front();
+		}
+	}
+	template <typename T> dl_list<T>& dl_list<T>::operator=(const dl_list<T>& other) {
+		if (this != &other) {
+			this->clear();
+			for (int i = 0; i < other.size; i++) 
+				this->push_back(other[i]);
+		}
+		return *this;
+	}
+
 }
+
 #endif //Data_structures
