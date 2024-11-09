@@ -6,6 +6,16 @@ This file has exception codes and their explanations
     FatalError: the number of keys is not valid for b-treee
 }
 
+207 {
+    Не можна відкрити файл для запису.
+    FileError: could not open file for writing
+}
+
+208 {
+    Не можна відкрити файл для читання.
+    FileError: could not open file for reading
+}
+
 12 {
     Помилка пошуку, дерево пусте
     SearchError: b-tree is empty
@@ -21,7 +31,7 @@ This file has exception codes and their explanations
     PrintError: b-tree is empty
 }
 
-15 {
+ 15 {
     Помилка видалення. Ключа не має
     DeleteError: b-tree has no delete key
 }
@@ -35,4 +45,29 @@ This file has exception codes and their explanations
     Фатальна помилка. Перевірте, чи правильно ви видаляєте
 	вузол, тому що видаляючий вузол має дітей!
     FatalError: The node that tried to delete has children, which is not allowed!
+}
+
+ 17 {
+    Хеш-Таблиця заповнена
+    AddError: Hash table is full!
+}
+
+ 18 {
+    Хеш-Таблиця майже заповнена (більше ніж 80%)
+    Warning: Hash table is almost full!(So key not Added)
+}
+
+ 19 {
+    Хеш-Таблиця не має ввденеого ключа
+    SearchError: Hash Table has no target key
+}
+
+ 20 {
+    Помилка пошуку, хеш таблиця пуста
+    PrintError: hash table is empty
+}
+
+ 21 {
+   При створенні хеш-таблиці її розмір повинен бути простим числом
+   FatalError: The size of the hash table is not prime
 }

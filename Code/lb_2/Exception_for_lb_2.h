@@ -7,8 +7,8 @@ namespace my_exceptions_2 {
 		const char* error_msg;
 	public:
 		error_2(const char*, const int&);
-		int get_error_code();
-		const char* get_error_msg();
+		int get_error_code() const;
+		const char* get_error_msg() const;
 	};
 	void My_exception_codes_file();
 }
