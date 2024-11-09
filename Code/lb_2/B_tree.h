@@ -6,6 +6,7 @@
 
 using std::string;
 using namespace my_exceptions_2;
+using data_struct::operator<<;
 using data_struct::dl_list;
 using std::ostream;
 using std::cout;

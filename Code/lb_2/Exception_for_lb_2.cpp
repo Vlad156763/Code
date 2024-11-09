@@ -19,6 +19,16 @@ namespace my_exceptions_2 {
 			<< "    FatalError: the number of keys is not valid for b-treee\n"
 			<< "}\n"
 			<< "\n"
+			<< "207 {\n"
+			<< "    Не можна відкрити файл для запису.\n"
+			<< "    FileError: could not open file for writing\n"
+			<< "}\n"
+			<< "\n"
+			<< "208 {\n"
+			<< "    Не можна відкрити файл для читання.\n"
+			<< "    FileError: could not open file for reading\n"
+			<< "}\n"
+			<< "\n"
 			<< "12 {\n"
 			<< "    Помилка пошуку, дерево пусте\n"
 			<< "    SearchError: b-tree is empty\n"
@@ -34,7 +44,7 @@ namespace my_exceptions_2 {
 			<< "    PrintError: b-tree is empty\n"
 			<< "}\n"
 			<< "\n"
-			<< "15 {\n"
+			<< " 15 {\n"
 			<< "    Помилка видалення. Ключа не має\n"
 			<< "    DeleteError: b-tree has no delete key\n"
 			<< "}\n"
@@ -56,10 +66,27 @@ namespace my_exceptions_2 {
 			<< "}\n"
 			<< "\n"
 			<< " 18 {\n"
+			<< "    Хеш-Таблиця майже заповнена (більше ніж 80%)\n"
+			<< "    Warning: Hash table is almost full!(So key not Added)\n"
+			<< "}\n"
+			<< "\n"
+			<< " 19 {\n"
 			<< "    Хеш-Таблиця не має ввденеого ключа\n"
 			<< "    SearchError: Hash Table has no target key\n"
+			<< "}\n"
+			<< "\n"
+			<< " 20 {\n"
+			<< "    Помилка пошуку, хеш таблиця пуста\n"
+			<< "    PrintError: hash table is empty\n"
+			<< "}\n"
+			<< "\n"
+			<< " 21 {\n"
+			<< "   При створенні хеш-таблиці її розмір повинен бути простим числом\n"
+			<< "   FatalError: The size of the hash table is not prime\n"
 			<< "}\n";
-
 		My_exception_codes.close();
 	}
 }
+/*
+
+*/

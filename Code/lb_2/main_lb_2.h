@@ -8,7 +8,11 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
+#include <fstream>
+using std::ofstream;
+using std::ifstream;
 using data_struct::dl_list;
+using data_struct::operator<<;
 using std::string;
 using std::cout;
 using std::endl;
@@ -98,6 +102,9 @@ namespace task_2 {
 	платника податку за заданим ідентифікаційним номером.
 	*/
 	static void Fhome_HachTable(dl_list<const char*>&, bool&);
+	static hash_Table<int, dl_list<char>> & Fhome_newTable(dl_list<const char*>&);
+	static void Fhome_methods(hash_Table<int, dl_list<char>>&, dl_list<const char*>&, bool&, bool&);
+	static void Fhome_taskG(bool&, dl_list<const char*>&, bool&);
 }
 
 #endif //!main_lb_2
