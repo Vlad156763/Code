@@ -596,9 +596,7 @@ template <typename T> void b_tree<T>::deletedKeyFromLeaf(node* current_node, con
 		//в іншому випадку коли ключів у листку мінімальна кількість
 		else {
 			//позичаю у брата
-			//VLAD: якщо не можна позичити у брата позика у брата сама викличе метод об'єднання (дивно, згоден, але є як є)
 			borrow(current_node, indexCurrentNodeInFather, indexCurrentDeletedKey);
 		}
 	}
-
 #endif // !B_tree

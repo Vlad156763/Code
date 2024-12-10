@@ -517,7 +517,7 @@ namespace task_2 {
 			}
 		} while (!exitLoopTask);
 	}
-
+ 
 	static void Fhome_HachTable(dl_list<const char*>& way, bool& main_home_exit) {
 		bool exit_loop_home = false;
 		way.push_back("Hesh_table_home/");

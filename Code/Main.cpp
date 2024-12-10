@@ -1,7 +1,6 @@
-#include "lb_2/main_lb_2.h"
+#include "lb_3/lb_3Main.h"
 int main() {
-using task_2::main_test_all_files;
-	main_test_all_files();
+	ui::show();
 	return 0;
 }
 
